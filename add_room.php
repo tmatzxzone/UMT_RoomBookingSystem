@@ -6,7 +6,7 @@
     
 
     /* Add data */
-    $querytester = "SELECT `room_num` FROM room_details WHERE `room_num` = '' "
+    $querytester = "SELECT `room_num` FROM room_details WHERE `room_num` = '' ";
 
     if(!empty($roomDetails))
     {
@@ -20,11 +20,7 @@
         }
         else{
             if(mysqli_error($conn)){
-                echo "ERROR: Failed to execute : <br>" . mysqli_error($conn)."<br>";
-                echo '<button type="button" onclick="javascript:window.location.replace(\'staff_page.php?id=update\');">Return</button>';
-            }
-            else{
-                echo '<script>alert("Failed to insert records!\nRoom ID already exists!"); </script>';
+                echo '<script>alert("Failed to insert records!\nRoom ID already exists!"); window.location.replace(\'staff_page.php?id=update\');</script>';
             }
             
         }
