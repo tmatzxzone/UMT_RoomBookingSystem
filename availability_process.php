@@ -34,6 +34,7 @@
 
                     //set current time & end time
                     date_default_timezone_set('Singapore');
+                    $currentDate = date('Y-m-d');
                     $currentTime = date('H:i');
                     $endTime = substr($sesi,-5);
                     
@@ -45,8 +46,8 @@
                                 ";
                                 
                     $query_run = mysqli_query($conn, $query);
-            
-                    if(strcmp($endTime,$currentTime) > 0) {
+
+                    if($date > $currentDate){
                         // output data of each row
                         if(mysqli_num_rows($query_run) > 0){
                             $i = 0;
@@ -57,7 +58,7 @@
                                         <td>' . $row["roomName"]. '</td> <input type="hidden" name="room[roomName]['.$i.']" value="'.$row["roomName"].'">
                                         <td>' .$row["roomDesc"]. '</td>
                                         <td>' . $date . '</td> <input type="hidden" name="room[date]['.$i.']" value="'.$date.'">
-                                                               <input type="hidden" name="room[sesi]['.$i.']" value="'.$sesi.'">
+                                                            <input type="hidden" name="room[sesi]['.$i.']" value="'.$sesi.'">
                                         <td>' . $row["rStatus"] . '</td>
                                         <td><button class="btn btn-primary" name="room[submit]['.$i.']" value="submit"><i class="fa fa-book" title="book now!"></i></button></td>
                                         </tr>';
@@ -69,10 +70,35 @@
                             echo '<tr><th>THERE IS NO AVAILABLE ROOM ON THIS DATE</h4></th></tr>';
                         }
                     }
-                    else {
-                        echo '<tr><th>SESSION HAS ENDED, PLEASE CHOOSE A LATER ONE</th></tr>';
+                    else{
+                        if(strcmp($endTime,$currentTime) > 0) {
+                            // output data of each row
+                            if(mysqli_num_rows($query_run) > 0){
+                                $i = 0;
+                                while($row = mysqli_fetch_array($query_run))
+                                {
+                                            echo '  <tr>
+                                            <td>' . $row["roomID"]. '</td> <input type="hidden" name="room[roomID]['.$i.']" value="'.$row["roomID"].'">
+                                            <td>' . $row["roomName"]. '</td> <input type="hidden" name="room[roomName]['.$i.']" value="'.$row["roomName"].'">
+                                            <td>' .$row["roomDesc"]. '</td>
+                                            <td>' . $date . '</td> <input type="hidden" name="room[date]['.$i.']" value="'.$date.'">
+                                                                   <input type="hidden" name="room[sesi]['.$i.']" value="'.$sesi.'">
+                                            <td>' . $row["rStatus"] . '</td>
+                                            <td><button class="btn btn-primary" name="room[submit]['.$i.']" value="submit"><i class="fa fa-book" title="book now!"></i></button></td>
+                                            </tr>';
+                                            $i++;
+                                }
+                                $_SESSION['count'] = $i;
+                            }
+                            else{
+                                echo '<tr><th>THERE IS NO AVAILABLE ROOM ON THIS DATE</h4></th></tr>';
+                            }
+                        }
+                        else {
+                            echo '<tr><th>SESSION HAS ENDED, PLEASE CHOOSE A LATER ONE</th></tr>';
+                        }
                     }
-                    
+            
                 echo'
                 </tbody>
             </table>
@@ -99,8 +125,10 @@
                 </thead>
                 <tbody>';
                     //set all session in a day
-                    $sessionList = Array("08:00 - 09:00", "09:00 - :10:00", "10:00 - 11:00", "11:00 - 12:00", "12:00 - 13:00",
-                                    "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00", "17:00 - 18:00");
+                    $sessionList = Array("08:00 - 09:00", "09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00", "12:00 - 13:00", "13:00 - 14:00",
+                                        "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00", "17:00 - 18:00", "18:00 - 19:00", "19:00 - 20:00",
+                                        "20:00 - 21:00", "21:00 - 22:00", "22:00 - 23:00", "23:00 - 00:00", "00:00 - 01:00", "01:00 - 02:00",
+                                        "02:00 - 03:00", "03:00 - 04:00", "04:00 - 05:00", "05:00 - 06:00", "06:00 - 07:00", "07:00 - 08:00");
 
                     //query to select all the rooms existing in room_details table
                     $query = "SELECT room_details.room_num as roomID, room_details.room_name as roomName, room_details.room_desc as roomDesc, room_details.status as rStatus 
@@ -114,7 +142,7 @@
                         {
                             //assigning room id to a variable for comparison
                             $id = $row["roomID"];
-                            $sessionCount = 0; // when sessionCount hit 9, it means all sessions are used and will not list the room
+                            $sessionCount = 0; // when sessionCount equals to size of sessionList, it means all sessions are used and will not list the room
 
                             //2nd query, to see if all the session used or not.
                             $query2 = "SELECT booking.session as _session FROM booking WHERE booking.room_num = '".$id."' AND booking.date = '".$date."' ";
@@ -124,7 +152,7 @@
                                 while($row2 = mysqli_fetch_array($query2_run)){
                                     $sesdb = $row2["_session"];
                                     
-                                    for($se = 0; $se < 9; $se++){
+                                    for($se = 0; $se < sizeof($sessionList); $se++){
                                         if(strcmp($sesdb,$sessionList[$se]) == 0){
                                             $sessionCount++;
                                         }
@@ -136,7 +164,7 @@
                             }
 
                             //determine whether the current room has full booked/used session or not
-                            if($sessionCount == 9){
+                            if($sessionCount == sizeof($sessionList)){
                                 continue;
                             }
                             else{
@@ -184,8 +212,10 @@
                     $cdate = date("Y-m-d");
 
                     //set all session in a day
-                    $sessionList = Array("08:00 - 09:00", "09:00 - :10:00", "10:00 - 11:00", "11:00 - 12:00", "12:00 - 13:00",
-                                    "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00", "17:00 - 18:00");
+                    $sessionList = Array("08:00 - 09:00", "09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00", "12:00 - 13:00", "13:00 - 14:00",
+                                        "14:00 - 15:00", "15:00 - 16:00", "16:00 - 17:00", "17:00 - 18:00", "18:00 - 19:00", "19:00 - 20:00",
+                                        "20:00 - 21:00", "21:00 - 22:00", "22:00 - 23:00", "23:00 - 00:00", "00:00 - 01:00", "01:00 - 02:00",
+                                        "02:00 - 03:00", "03:00 - 04:00", "04:00 - 05:00", "05:00 - 06:00", "06:00 - 07:00", "07:00 - 08:00");
 
                     //query to select all the rooms existing in room_details table
                     $query = "SELECT room_details.room_num as roomID, room_details.room_name as roomName, room_details.room_desc as roomDesc, room_details.status as rStatus 
@@ -209,7 +239,7 @@
                                 while($row2 = mysqli_fetch_array($query2_run)){
                                     $sesdb = $row2["_session"];
                                     
-                                    for($se = 0; $se < 9; $se++){
+                                    for($se = 0; $se < sizeof($sessionList); $se++){
                                         if(strcmp($sesdb,$sessionList[$se]) == 0){
                                             $sessionCount++;
                                         }
@@ -221,7 +251,7 @@
                             }
 
                             //determine whether the current room has full booked/used session or not
-                            if($sessionCount == 9){
+                            if($sessionCount == sizeof($sessionList)){
                                 continue;
                             }
                             else{
