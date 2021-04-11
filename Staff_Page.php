@@ -285,8 +285,9 @@ body {
 	if(isset($_GET['date'])){
 		$_SESSION['date'] = $_GET['date'];
 
-		if(!empty($_GET['sess'])){
-			$_SESSION['sesi'] = $_GET['sess'];
+		if(!empty($_GET['startTime']) AND !empty($_GET['endTime'])){
+			$sess = $_GET['startTime'].' - '.$_GET['endTime'];
+			$_SESSION['sesi'] = $sess;
 		}
 	}
 
