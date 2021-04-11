@@ -1,10 +1,11 @@
-<?php session_start(); ?>
+<?php session_start(); include_once ('dbcons.php'); ?>
 <!doctype html>
 <html lang="en">
 <head>
 	<!-- Styling link -->
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<!-- jQuery library -->
@@ -18,20 +19,13 @@
     crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
-    <!-- sidenav -->
-    <script type="text/javascript" src="js/side.nav.js"></script>
+    <!-- Table Scroll -->
+    <script src="js/scroll.js"></script>
 	<title>Dashboard</title>
-
-	<style>
-		html *
-		{
-			font-size: 16px !important;
-		}
-	</style>
 
 	<!-- ##### Ajax Dynamic Page Loader Initialization##### -->
     <script type="text/javascript">
-		function loadpage(page){
+		function loadtable(page){
 			$.ajax({
 				url:page,
 				beforeSend:function(){
@@ -40,6 +34,23 @@
 				success:function(data){
 					$('#table_loader').html(""); // to empty previous page contents.
 					$('#table_loader').html(data);
+				}
+			});
+		}
+	</script>
+	<!-- ##### End Of page loader ##### -->
+
+	<!-- ##### Ajax Dynamic Page Loader Initialization##### -->
+    <script type="text/javascript">
+		function loadtable2(page){
+			$.ajax({
+				url:page,
+				beforeSend:function(){
+					$('#table_loader2').html("Please wait...");
+				},
+				success:function(data){
+					$('#table_loader2').html(""); // to empty previous page contents.
+					$('#table_loader2').html(data);
 				}
 			});
 		}
@@ -93,103 +104,59 @@
 	<?php include_once ('header.php'); ?>
 	<!--== Navigation Bar Ends Here ==-->
 
-	<!--== HERO ==-->
-	
-	<section id="hero">
-		<div class="container-fluid jumbotron">
-			<div class="row">
-				<div class="col-lg-12 col-sm-12">
-					<div class="card m-b-30">
-						<div class="card-body">
-							<h5 class="header-title pb-3">Available Rooms</h5>           
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="table-responsive">
-										<table class="table table-hover m-b-0" id="table-loader">
-											<script type="text/javascript">
-												$(document).ready(function() {
-												loadtable('#.php');
-												});
-											</script>
-										</table>
-									</div>
-								</div>
-							</div>              
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-		</div>
-	</section>
-	<!--== Hero Ends Here ==-->
 
 	<!--== Main ==-->
-	<main>
-
-		<!--== Donut Section ==-->
-		<section id="" class=" mx-5 py-5">
-			<div class="container-fluid">
+	<div class="container-fluid jumbotron">
+		<section>
 				<div class="row">
-					<div class="col-lg-12 col-sm-14">
-						<div class="card m-b-30">
-							<div class="card-body">
-								<h5 class="header-title pb-3">Summary</h5>           
-								<div id="donut-chart"></div>             
-							</div>
-						</div>
+					<div class="col-lg my-5">
+						<h5 class="header-title pb-3 text-center">Popular Rooms</h5>           
+						<div id="donut-chart" class="d-flex justify-content-center"></div>
 					</div>
-				</div> <!-- End Row -->                    
-			</div><!--end container-->
-		</section>
-		<!--== Donut Ends Here ==-->
 
+					<div class="col-lg bg-white py-4">
+								<h5 class="header-title pb-3 text-center">Available Rooms</h5>
+								<div class="table-responsive-lg" id="table_loader">
+									<script type="text/javascript">
+										$(document).ready(function() {
+										loadtable('dash_rooms.php');
+										});
+									</script>
+								</div>
+					</div>
+				</div>
+		</section>
+		
 		<!--== Recent Section ==-->
-		<section id="" class="mx-5 py-5"  >
-			<div class="container-fluid">
+		<section id="" class=" py-5">
 				<div class="row">
-					<div class="col-lg-12 col-sm-12">
+					<div class="col-lg">
 						<div class="card m-b-30">
 							<div class="card-body">
-								<h5 class="header-title pb-3">Recent Booking</h5>           
-								<div class="row">
-									<div class="col-sm-12">
-										<div class="table-responsive">
-											<table class="table table-hover m-b-0" id="table-loader">
-												<script type="text/javascript">
-													$(document).ready(function() {
-													loadtable('dashboard_table.php');
-													});
-												</script>
-											</table>
-										</div>
-									</div>
+								<h5 class="header-title pb-3 text-center">Recent Booking</h5>
+								<div class="table-responsive-lg" id="table_loader2">
+									<script type="text/javascript">
+										$(document).ready(function() {
+										loadtable2('dash_recent.php');
+										});
+									</script>
 								</div>              
 							</div>
 						</div>
 					</div>
-				</div> <!-- End Row -->                    
-			</div><!--end container-->
+				</div> <!-- End Row -->
 		</section>
 		<!--== Services Ends Here ==-->
-
-		<!--== Us Section ==-->
-			<section class="" id="" style="background: white;">
-			
-			</section>
-		<!--== Services Us Ends Here ==-->
-	</main>
+	</div>
 	<!--== Main Ends Here ==-->
 
 	
 	<!-- jQuery to load donut -->
-	<script src="js/jquery-3.2.1.min.js"></script>
-	<script src="js/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 	<script src="plugins/morris-chart/raphael-min.js"></script>
 	<script src="plugins/morris-chart/morris.js"></script>
+
+
 	
 
 
@@ -199,32 +166,44 @@
 	 * 			Charts Loader		 *
 	 * 								 *
 	 *********************************/
+	$room = array();
+	$occur = array();
+	$query_count= "SELECT `room_num`, COUNT(`room_num`) AS `value_occurrence` FROM `booking` GROUP BY `room_num` ORDER BY `value_occurrence` DESC LIMIT 5";
+	$run = mysqli_query($conn, $query_count);
+
+	if(mysqli_num_rows($run) > 0){
+		while($row = mysqli_fetch_array($run)){
+			$query_name = "SELECT `room_name` FROM `room_details` WHERE `room_num` = '".$row['room_num']."' ";
+			$run_name = mysqli_query($conn, $query_name);
+			while($row2 = mysqli_fetch_array($run_name)){
+				array_push($room, $row2['room_name']);
+			}
+			array_push($occur, $row['value_occurrence']);
+		}
+	}
+	else{
+		echo '<script>alert("There Is No Data To Be Counted! #StatisticDonut");</script>';
+	}
+
 ?>
 
-
-	<!-- Donut Chart Data 
 	<script>
-            Morris.Donut({
+		var room = <?php echo json_encode($room, JSON_HEX_TAG); ?>;
+        var occur = <?php echo json_encode($occur, JSON_HEX_TAG); ?>;
+
+
+ 		Morris.Donut({
               element: 'donut-chart',
               data: [
-                {label: "Test", value: 13},
-                {label: "Woo", value: 30},
-                {label: "Kekw", value: 20}
-              ], resize: true, colors: [ '#00bcd2', '#424858', '#ffcdd3']
-            });
-        </script>
- End Of Donut Chart Data -->
+				{label: room[0], value: occur[0]},
+				{label: room[1], value: occur[1]},
+				{label: room[2], value: occur[2]},
+				{label: room[3], value: occur[3]},
+				{label: room[4], value: occur[4]}
+              ], resize: true, colors: ['#21ea50', '#95eb21', '#eaeb21', '#ebb521', '#ee7a20']
+        }); 
 
-	<!--app js
-        <script src="dashboard/js/jquery.app.js"></script>
-        <script>
-            jQuery(document).ready(function($) {
-                $('.counter').counterUp({
-                delay: 100,
-                time: 1200
-                });
-            });
-        </script>-->
+	</script>
 
 </body>
 </html>
