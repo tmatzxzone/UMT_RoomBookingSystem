@@ -58,13 +58,13 @@
         <form action="edit_process.php" method="POST">
           <div class="row my-5">
             <div class="col-sm"></div>
-            <div class="col-sm">
+            <div class="col-sm my-3">
               <div class="form-outline">
                   <input type="text" class="form-control text-white" id="roomNumber" name="roomNumber" value="<?php echo $ID; ?>" rows="4" required/>
                   <label class="form-label" style="color:white;">Room Number</label>
               </div>
             </div>
-              <div class="col-sm">
+              <div class="col-sm my-3">
                 <div class="form-outline">
                   <input type="text" class="form-control text-white" id="roomName" name="roomName" value="<?php echo $Rname; ?>" rows="4" required/>
                   <label class="form-label" style="color:white;">Room Name</label>
@@ -74,13 +74,13 @@
           </div>
           <div class="row my-5">
             <div class="col-sm"></div>
-            <div class="col-sm">
+            <div class="col-sm my-3">
               <div class="form-outline">
                   <input type="text" class="form-control text-white" id="roomDesc" name="roomDesc" value="<?php echo $Desc; ?>" rows="4" cols="40" required>
                   <label class="form-label" style="color:white;">Room Description</label>
               </div>
             </div>
-              <div class="col-sm">
+              <div class="col-sm my-3">
                 <div class="form-outline">
                   <input type="text" class="form-control text-white" id="roomStatus" name="roomStatus" value="<?php echo $status; ?>" rows="4" required/>
                   <label class="form-label" style="color:white;">Room Status</label>
